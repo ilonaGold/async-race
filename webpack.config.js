@@ -30,7 +30,7 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/ilonagold-JSFEEN2024Q4/async-race/",
+    publicPath: "/async-race/",
   },
   devServer: {
     static: {
