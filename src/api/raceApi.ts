@@ -8,7 +8,7 @@ import {
 } from "@/types";
 
 export default class RaceApi {
-  private static readonly BASE_URL = "https://async-race-api-fws6.onrender.com";
+  private static readonly BASE_URL = "https://async-race-api-fvw6.onrender.com";
   // Get cars with pagination
   static async getCars(
     page: number,
