@@ -8,7 +8,7 @@
     "build": "webpack --mode production",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
-    "deploy": "npm run build && gh-pages -d dist -e async-race -a"
+    "deploy": "npm run build && gh-pages -d dist -a"
   },
   "keywords": [],
   "author": "",
