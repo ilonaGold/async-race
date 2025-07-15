@@ -3,6 +3,7 @@ import { Car } from "@/types";
 import { CarAnimation } from "@/components/car/carAnimation";
 
 class GarageView {
+  private isLoading = false;
   private currentPage = 1;
   private cars: Car[] = [];
   private carAnimations: Map<number, CarAnimation> = new Map();
@@ -66,6 +67,20 @@ class GarageView {
     const container = document.createElement("div");
     container.className = "garage-container";
 
+    // Create loader
+    const loader = document.createElement("div");
+    loader.className = "garage-loader";
+    loader.innerHTML = `
+      <div class="garage-loader-content">
+        <div class="spinning-cog-fallback">⚙️</div>
+        <div class="garage-loader-text">Warming up the engines...</div>
+      </div>
+    `;
+    container.appendChild(loader);
+
+    this.isLoading = true;
+    loader.style.display = "flex";
+
     try {
       const { cars, total } = await RaceApi.getCars(
         this.currentPage,
@@ -74,18 +89,33 @@ class GarageView {
       this.cars = cars;
       this.totalCars = total;
 
-      container.innerHTML = `
-        <div class="controls">
-          ${this.renderCreateForm()}
-          ${this.renderUpdateForm()}
-          ${this.renderRaceControls()}
-        </div>
-        <h2>Garage (${this.totalCars})</h2>
-        ${this.renderPagination()}
-        <div class="tracks">
-          ${this.cars.map((car) => this.renderCarTrack(car)).join("")}
-        </div>
-      `;
+      this.isLoading = false;
+      loader.style.display = "none";
+
+      // Append controls, header, pagination, and tracks as elements
+      const controls = document.createElement("div");
+      controls.className = "controls";
+      controls.innerHTML =
+        this.renderCreateForm() +
+        this.renderUpdateForm() +
+        this.renderRaceControls();
+      container.appendChild(controls);
+
+      const h2 = document.createElement("h2");
+      h2.textContent = `Garage (${this.totalCars})`;
+      container.appendChild(h2);
+
+      const pagination = document.createElement("div");
+      pagination.innerHTML = this.renderPagination();
+      container.appendChild(pagination.firstElementChild!);
+
+      const tracks = document.createElement("div");
+      tracks.className = "tracks";
+      tracks.innerHTML = this.cars
+        .map((car) => this.renderCarTrack(car))
+        .join("");
+      container.appendChild(tracks);
+
       // Race controls event listeners
       container
         .querySelector("#race-btn")
@@ -94,8 +124,12 @@ class GarageView {
         .querySelector("#reset-btn")
         ?.addEventListener("click", () => this.resetRace());
     } catch (error) {
+      this.isLoading = false;
+      loader.style.display = "none";
       console.error("Error loading garage:", error);
-      container.innerHTML = "<p>Error loading garage data</p>";
+      const errorMsg = document.createElement("p");
+      errorMsg.textContent = "Error loading garage data";
+      container.appendChild(errorMsg);
     }
 
     container.addEventListener("click", (e) => {
