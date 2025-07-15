@@ -1,57 +1,68 @@
 # 🏁 Async Race
 
-A dynamic single-page racing game built with TypeScript featuring car management and real-time race animations. Create, customize, and race cars while tracking winners and statistics in this engaging web application.
+A dynamic single-page racing game built with TypeScript featuring car management and real-time race animations. Includes comprehensive Garage for creating, editing, and deleting cars with color customization, plus Winners page tracking race statistics. Features asynchronous racing with smooth animations, responsive design, and complete CRUD operations via RESTful API. Demonstrates modern web development practices with modular architecture and engaging user interactions. Uses mock API server hosted on Render.com's free tier which may experience cold starts.
 
 ## ✨ Features
 
 ### 🚗 Garage Management
+
 - **CRUD Operations**: Create, read, update, and delete cars with custom names and colors
 - **Color Customization**: RGB color picker with real-time car preview
 - **Bulk Generation**: Generate 100 random cars instantly for testing
 - **Pagination**: Navigate through your car collection (7 cars per page)
+- **Professional Loader**: Elegant spinning gear loader with racing-themed messaging that handles cold starts gracefully
 
 ### 🏎️ Racing System
+
 - **Individual Control**: Start and stop engines for each car independently
 - **Race Mode**: Start races for all cars on the current page simultaneously
 - **Real-time Animations**: Smooth car movements with adaptive speeds
 - **Winner Detection**: Automatic winner announcement with race statistics
 
 ### 🏆 Winners Tracking
+
 - **Statistics Dashboard**: View winning cars with their performance data
 - **Sorting Options**: Sort by number of wins or best lap times
 - **Pagination**: Navigate through winners efficiently
 - **Performance Metrics**: Track wins count and best times for each car
 
 ### 📱 Technical Features
+
 - **Responsive Design**: Works seamlessly on devices as small as 500px
 - **TypeScript**: Fully typed codebase with strict type checking
 - **Modular Architecture**: Clean separation of concerns and maintainable code
 - **API Integration**: RESTful API communication with proper error handling
+- **UX Optimization**: Custom loading states with spinning animations improve user experience during API calls
 
 ## 🚀 Getting Started
 
 ### Live Demo
+
 **🌐 [Play Async Race](https://ilonagold.github.io/async-race/)**
 
 ### Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/ilonaGold/async-race.git
    cd async-race
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start development server**
+
    ```bash
    npm start
    ```
 
 4. **Build for production**
+
    ```bash
    npm run build
    ```
@@ -70,6 +81,7 @@ This project uses a mock API server for demonstration purposes.
 - **Note**: The server is hosted on Render.com's free tier and may experience cold starts
 
 ### API Endpoints
+
 - `GET /garage` - Get all cars with pagination
 - `POST /garage` - Create a new car
 - `PUT /garage/:id` - Update car details
