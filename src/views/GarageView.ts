@@ -72,65 +72,72 @@ class GarageView {
     loader.className = "garage-loader";
     loader.innerHTML = `
       <div class="garage-loader-content">
-        <div class="spinning-cog-fallback">⚙️</div>
+        <div class="spinning-cog" style="color: #ff0000 !important;">⚙</div>
         <div class="garage-loader-text">Warming up the engines...</div>
       </div>
     `;
     container.appendChild(loader);
 
     this.isLoading = true;
-    loader.style.display = "flex";
 
-    try {
-      const { cars, total } = await RaceApi.getCars(
-        this.currentPage,
-        this.carsPerPage
-      );
-      this.cars = cars;
-      this.totalCars = total;
+    // Start loading in the background after a brief delay to ensure DOM is ready
+    setTimeout(async () => {
+      // Add 3 second delay for testing and for more pleasing patience experience
+      // This also helps with cold start scenarios where initial API calls can take up to 30 seconds
+      // Better to show a polished loader than a blank screen!
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      this.isLoading = false;
-      loader.style.display = "none";
+      try {
+        const { cars, total } = await RaceApi.getCars(
+          this.currentPage,
+          this.carsPerPage
+        );
+        this.cars = cars;
+        this.totalCars = total;
 
-      // Append controls, header, pagination, and tracks as elements
-      const controls = document.createElement("div");
-      controls.className = "controls";
-      controls.innerHTML =
-        this.renderCreateForm() +
-        this.renderUpdateForm() +
-        this.renderRaceControls();
-      container.appendChild(controls);
+        this.isLoading = false;
+        loader.remove();
 
-      const h2 = document.createElement("h2");
-      h2.textContent = `Garage (${this.totalCars})`;
-      container.appendChild(h2);
+        // Append controls, header, pagination, and tracks as elements
+        const controls = document.createElement("div");
+        controls.className = "controls";
+        controls.innerHTML =
+          this.renderCreateForm() +
+          this.renderUpdateForm() +
+          this.renderRaceControls();
+        container.appendChild(controls);
 
-      const pagination = document.createElement("div");
-      pagination.innerHTML = this.renderPagination();
-      container.appendChild(pagination.firstElementChild!);
+        const h2 = document.createElement("h2");
+        h2.textContent = `Garage (${this.totalCars})`;
+        container.appendChild(h2);
 
-      const tracks = document.createElement("div");
-      tracks.className = "tracks";
-      tracks.innerHTML = this.cars
-        .map((car) => this.renderCarTrack(car))
-        .join("");
-      container.appendChild(tracks);
+        const pagination = document.createElement("div");
+        pagination.innerHTML = this.renderPagination();
+        container.appendChild(pagination.firstElementChild!);
 
-      // Race controls event listeners
-      container
-        .querySelector("#race-btn")
-        ?.addEventListener("click", () => this.startRace());
-      container
-        .querySelector("#reset-btn")
-        ?.addEventListener("click", () => this.resetRace());
-    } catch (error) {
-      this.isLoading = false;
-      loader.style.display = "none";
-      console.error("Error loading garage:", error);
-      const errorMsg = document.createElement("p");
-      errorMsg.textContent = "Error loading garage data";
-      container.appendChild(errorMsg);
-    }
+        const tracks = document.createElement("div");
+        tracks.className = "tracks";
+        tracks.innerHTML = this.cars
+          .map((car) => this.renderCarTrack(car))
+          .join("");
+        container.appendChild(tracks);
+
+        // Race controls event listeners
+        container
+          .querySelector("#race-btn")
+          ?.addEventListener("click", () => this.startRace());
+        container
+          .querySelector("#reset-btn")
+          ?.addEventListener("click", () => this.resetRace());
+      } catch (error) {
+        this.isLoading = false;
+        loader.remove();
+        console.error("Error loading garage:", error);
+        const errorMsg = document.createElement("p");
+        errorMsg.textContent = "Error loading garage data";
+        container.appendChild(errorMsg);
+      }
+    }, 100);
 
     container.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
